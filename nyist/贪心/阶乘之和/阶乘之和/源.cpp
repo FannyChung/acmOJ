@@ -29,14 +29,38 @@ bool isJie(int n,int i){//判断n是否是阶乘之和
 		return isJie(n, i + 1);//不包含i的阶乘
 	}
 }
+
+bool isJieSum(int n,int k[]){//贪心实现
+	for (int i = 8; i >=0; i--)
+	{
+		if (n>=k[i]){
+			n -= k[i];
+		}
+		if (n == 0){
+			return true;
+		}
+	}
+	return false;
+}
+
+
 int main(){
 	int m;
 	cin >> m;
+	int tmp = 1;
+	int k[9];
+	for (int i = 1; i <= 9; i++)
+	{
+		k[i-1] = tmp;
+		cout << tmp << endl;
+		tmp *= (i + 1);
+	}
 	for (int i = 0; i < m; i++)//m组测试数据
 	{
 		int n;
 		cin >> n;
-		if (isJie(n, 1)){
+		//if (isJie(n, 1)){
+		if (isJieSum(n,k)){
 			cout << "Yes" << endl;
 		}
 		else
