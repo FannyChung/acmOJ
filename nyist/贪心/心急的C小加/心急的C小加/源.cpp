@@ -13,33 +13,26 @@ struct Wood
 		return (l < other.l);
 	}
 };
-
-int getMax(Wood *wood, int i,int k, int n){//i是当前 k是前一个被加入链的元素
-	if (i == n - 1){
-		int s1 = getMax(wood, i - 1, i, n)+1;//包括最后一个元素
-		int s2 = getMax(wood, i - 1, n, n);//不包括
-	}
-	if (i < 0)
+int getMaxRevLen(Wood *wood, int i,int last,int n){
+	if (i == n)
 		return 0;
-	if (wood[k].l > wood[i].l&&wood[k].w > wood[i].w){
-		return 1 + getMax(wood, i - 1, i, n);
+	if (last == -1){
+		int max=0;
+		while (wood[i].w<=wood[i + 1].w)//能够比较，则不在最长反链中
+		{
+			i++;
+		}
+		int k1 = getMaxRevLen(wood, i+1, last,n);//不在
+		int k2 = 1 + getMaxRevLen(wood, i + 1, i,n);//在，i变为last
+		return (k1>k2 ? k1 : k2);//取大者
+	}
+	if (wood[i].w >= wood[last].w){//可比，不在
+		return getMaxRevLen(wood, i + 1, last,n);
 	}
 	else
 	{
-		return getMax(wood, i - 1, k, n);
+		return 1+getMaxRevLen(wood, i + 1, i,n);
 	}
-}
-int getMaxUp(Wood *wood,int i,int last,int n){//数组的i~n-1的最长上升个数
-	if (i == n){
-		return 0;
-	}
-	int tmp1,tmp2;
-	tmp1 = getMaxUp(wood, i + 1, last, n);//不在
-	if (wood[i].w < wood[last].w){//不相容
-		return tmp1;
-	}
-	tmp2 = 1 + getMaxUp(wood, i + 1, i, n);//在
-	return (tmp1 > tmp2 )? tmp1 : tmp2;
 }
 int main(){
 	int T;
@@ -55,7 +48,7 @@ int main(){
 		}
 		sort(wall, wall + N);//按照l排序
 
-		cout << getMaxUp(wall, << endl;
+		cout << "result"<<getMaxRevLen(wall, 0, -1,N) << endl;
 		delete[]wall;
 	}
 	return 0;
